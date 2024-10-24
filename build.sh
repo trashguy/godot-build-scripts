@@ -100,43 +100,43 @@ case "$choice" in
   * ) echo "Invalid choice, aborting."; exit 1;;
 esac
 export GODOT_VERSION_STATUS="${status}"
-
-if [ "${status}" == "stable" ]; then
-  build_steam=1
-fi
-
-if [ ! -z "${username}" ] && [ ! -z "${password}" ]; then
-  if ${podman} login ${registry} -u "${username}" -p "${password}"; then
-    export logged_in=true
-  fi
-fi
-
-if [ $skip_download == 0 ]; then
-  echo "Fetching images"
-  for image in windows linux web; do
-    if [ ${force_download} == 1 ] || ! ${podman} image exists godot/$image; then
-      if ! ${podman} pull ${registry}/godot/${image}; then
-        echo "ERROR: image $image does not exist and can't be downloaded"
-        exit 1
-      fi
-    fi
-  done
-
-  if [ ! -z "${logged_in}" ]; then
-    echo "Fetching private images"
-
-    for image in macosx android ios; do
-      if [ ${force_download} == 1 ] || ! ${podman} image exists godot-private/$image; then
-        if ! ${podman} pull ${registry}/godot-private/${image}; then
-          echo "ERROR: image $image does not exist and can't be downloaded"
-          exit 1
-        fi
-      fi
-    done
-  fi
-fi
-
-# macOS needs MoltenVK
+#
+#if [ "${status}" == "stable" ]; then
+#  build_steam=1
+#fi
+#
+#if [ ! -z "${username}" ] && [ ! -z "${password}" ]; then
+#  if ${podman} login ${registry} -u "${username}" -p "${password}"; then
+#    export logged_in=true
+#  fi
+#fi
+#
+#if [ $skip_download == 0 ]; then
+#  echo "Fetching images"
+#  for image in windows linux web; do
+#    if [ ${force_download} == 1 ] || ! ${podman} image exists godot/$image; then
+#      if ! ${podman} pull ${registry}/godot/${image}; then
+#        echo "ERROR: image $image does not exist and can't be downloaded"
+#        exit 1
+#      fi
+#    fi
+#  done
+#
+#  if [ ! -z "${logged_in}" ]; then
+#    echo "Fetching private images"
+#
+#    for image in macosx android ios; do
+#      if [ ${force_download} == 1 ] || ! ${podman} image exists godot-private/$image; then
+#        if ! ${podman} pull ${registry}/godot-private/${image}; then
+#          echo "ERROR: image $image does not exist and can't be downloaded"
+#          exit 1
+#        fi
+#      fi
+#    done
+#  fi
+#fi
+#
+## macOS needs MoltenVK
 if [ ! -d "deps/moltenvk" ]; then
   echo "Missing MoltenVK for macOS, downloading it."
   mkdir -p deps/moltenvk
@@ -193,7 +193,7 @@ if [ ! -d "deps/keystore" ]; then
 fi
 
 if [ "${skip_git_checkout}" == 0 ]; then
-  git clone https://github.com/godotengine/godot git || /bin/true
+  git clone https://github.com/Redot-Engine/redot-engine git || /bin/true
   pushd git
   git checkout -b ${git_treeish} origin/${git_treeish} || git checkout ${git_treeish}
   git reset --hard
@@ -220,33 +220,35 @@ EOF
 fi
 
 export basedir="$(pwd)"
-mkdir -p ${basedir}/out
-mkdir -p ${basedir}/out/logs
-mkdir -p ${basedir}/mono-glue
+#mkdir -p ${basedir}/out
+#mkdir -p ${basedir}/out/logs
+#mkdir -p ${basedir}/mono-glue
 
+#mv redot-4.3-beta.1.tar.gz godot-4.3-beta.1.tar.gz
+#
 export podman_run="${podman} run -it --rm --env BUILD_NAME --env GODOT_VERSION_STATUS --env NUM_CORES --env CLASSICAL=${build_classical} --env MONO=${build_mono} -v ${basedir}/godot-${godot_version}.tar.gz:/root/godot.tar.gz -v ${basedir}/mono-glue:/root/mono-glue -w /root/"
 export img_version=$IMAGE_VERSION
+#
+#mkdir -p ${basedir}/mono-glue
+#${podman_run} -v ${basedir}/build-mono-glue:/root/build localhost/godot-linux:${img_version} bash build/build.sh 2>&1 | tee ${basedir}/out/logs/mono-glue
+##
+#mkdir -p ${basedir}/out/windows
+#${podman_run} -v ${basedir}/build-windows:/root/build -v ${basedir}/out/windows:/root/out -v ${basedir}/deps/angle:/root/angle -v ${basedir}/deps/mesa:/root/mesa --env STEAM=${build_steam} localhost/godot-windows:${img_version} bash build/build.sh 2>&1 | tee ${basedir}/out/logs/windows
 
-mkdir -p ${basedir}/mono-glue
-${podman_run} -v ${basedir}/build-mono-glue:/root/build localhost/godot-linux:${img_version} bash build/build.sh 2>&1 | tee ${basedir}/out/logs/mono-glue
+#mkdir -p ${basedir}/out/linux
+#${podman_run} -v ${basedir}/build-linux:/root/build -v ${basedir}/out/linux:/root/out localhost/godot-linux:${img_version} bash build/build.sh 2>&1 | tee ${basedir}/out/logs/linux
 
-mkdir -p ${basedir}/out/windows
-${podman_run} -v ${basedir}/build-windows:/root/build -v ${basedir}/out/windows:/root/out -v ${basedir}/deps/angle:/root/angle -v ${basedir}/deps/mesa:/root/mesa --env STEAM=${build_steam} localhost/godot-windows:${img_version} bash build/build.sh 2>&1 | tee ${basedir}/out/logs/windows
+#mkdir -p ${basedir}/out/web
+#${podman_run} -v ${basedir}/build-web:/root/build -v ${basedir}/out/web:/root/out localhost/godot-web:${img_version} bash build/build.sh 2>&1 | tee ${basedir}/out/logs/web
 
-mkdir -p ${basedir}/out/linux
-${podman_run} -v ${basedir}/build-linux:/root/build -v ${basedir}/out/linux:/root/out localhost/godot-linux:${img_version} bash build/build.sh 2>&1 | tee ${basedir}/out/logs/linux
+#mkdir -p ${basedir}/out/macos
+#${podman_run} -v ${basedir}/build-macos:/root/build -v ${basedir}/out/macos:/root/out -v ${basedir}/deps/moltenvk:/root/moltenvk -v ${basedir}/deps/angle:/root/angle localhost/godot-osx:${img_version} bash build/build.sh 2>&1 | tee ${basedir}/out/logs/macos
 
-mkdir -p ${basedir}/out/web
-${podman_run} -v ${basedir}/build-web:/root/build -v ${basedir}/out/web:/root/out localhost/godot-web:${img_version} bash build/build.sh 2>&1 | tee ${basedir}/out/logs/web
-
-mkdir -p ${basedir}/out/macos
-${podman_run} -v ${basedir}/build-macos:/root/build -v ${basedir}/out/macos:/root/out -v ${basedir}/deps/moltenvk:/root/moltenvk -v ${basedir}/deps/angle:/root/angle localhost/godot-osx:${img_version} bash build/build.sh 2>&1 | tee ${basedir}/out/logs/macos
-
-mkdir -p ${basedir}/out/android
+#mkdir -p ${basedir}/out/android
 ${podman_run} -v ${basedir}/build-android:/root/build -v ${basedir}/out/android:/root/out -v ${basedir}/deps/keystore:/root/keystore localhost/godot-android:${img_version} bash build/build.sh 2>&1 | tee ${basedir}/out/logs/android
 
-mkdir -p ${basedir}/out/ios
-${podman_run} -v ${basedir}/build-ios:/root/build -v ${basedir}/out/ios:/root/out localhost/godot-ios:${img_version} bash build/build.sh 2>&1 | tee ${basedir}/out/logs/ios
+#mkdir -p ${basedir}/out/ios
+#${podman_run} -v ${basedir}/build-ios:/root/build -v ${basedir}/out/ios:/root/out localhost/godot-ios:${img_version} bash build/build.sh 2>&1 | tee ${basedir}/out/logs/ios
 
 if [ ! -z "$SUDO_UID" ]; then
   chown -R "${SUDO_UID}":"${SUDO_GID}" ${basedir}/git ${basedir}/out ${basedir}/mono-glue ${basedir}/godot*.tar.gz

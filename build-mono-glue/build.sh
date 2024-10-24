@@ -25,7 +25,7 @@ if [ "${MONO}" == "1" ]; then
   ${SCONS} platform=linuxbsd ${OPTIONS} target=editor module_mono_enabled=yes
 
   rm -rf /root/mono-glue/*
-  bin/godot.linuxbsd.editor.x86_64.mono --headless --generate-mono-glue /root/mono-glue
+  bin/redot.linuxbsd.editor.x86_64.mono --headless --generate-mono-glue /root/mono-glue
 fi
 
 echo "Mono glue generated successfully"
