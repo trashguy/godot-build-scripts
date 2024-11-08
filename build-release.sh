@@ -45,6 +45,7 @@ sign_macos() {
   ssh "${OSX_HOST}" "
             cd ${_macos_tmpdir} && \
             unzip ${_binname}.zip && \
+            security unlock-keychain && \
             codesign --force --timestamp \
               --options=runtime --entitlements editor.entitlements \
               -s ${OSX_KEY_ID} -v ${_appname} && \
@@ -338,63 +339,63 @@ if [ "${build_classical}" == "1" ]; then
 #  rm -rf macos_template.app
 #  sign_macos_template ${templatesdir} 0
 #
-#  ## Web (Classical) ##
-#
-#  # Editor
-#  unzip out/web/tools/redot.web.editor.wasm32.zip -d ${webdir}/
-#  brotli --keep --force --quality=11 ${webdir}/*
-#  binname="${godot_basename}_web_editor.zip"
-#  cp out/web/tools/redot.web.editor.wasm32.zip ${reldir}/${binname}
-#
-#  # Templates
-#  cp out/web/templates/redot.web.template_release.wasm32.zip ${templatesdir}/web_release.zip
-#  cp out/web/templates/redot.web.template_debug.wasm32.zip ${templatesdir}/web_debug.zip
-#
-#  cp out/web/templates/redot.web.template_release.wasm32.nothreads.zip ${templatesdir}/web_nothreads_release.zip
-#  cp out/web/templates/redot.web.template_debug.wasm32.nothreads.zip ${templatesdir}/web_nothreads_debug.zip
-#
-#  cp out/web/templates/redot.web.template_release.wasm32.dlink.zip ${templatesdir}/web_dlink_release.zip
-#  cp out/web/templates/redot.web.template_debug.wasm32.dlink.zip ${templatesdir}/web_dlink_debug.zip
-#
-#  cp out/web/templates/redot.web.template_release.wasm32.nothreads.dlink.zip ${templatesdir}/web_dlink_nothreads_release.zip
-#  cp out/web/templates/redot.web.template_debug.wasm32.nothreads.dlink.zip ${templatesdir}/web_dlink_nothreads_debug.zip
-#
-#  ## Android (Classical) ##
-#
-#  # Lib for direct download
-#  cp out/android/templates/godot-lib.template_release.aar ${reldir}/godot-lib.${templates_version}.template_release.aar
-#
-#  # Editor
-#  binname="${godot_basename}_android_editor.apk"
-#  cp out/android/tools/android_editor.apk ${reldir}/${binname}
-#  binname="${godot_basename}_android_editor.aab"
-#  cp out/android/tools/android_editor.aab ${reldir}/${binname}
-#
-#  # Templates
-#  cp out/android/templates/*.apk ${templatesdir}/
-#  cp out/android/templates/android_source.zip ${templatesdir}/
-#
-#  ## iOS (Classical) ##
-#
-#  rm -rf ios_xcode
-#  cp -r git/misc/dist/ios_xcode ios_xcode
-#  cp out/ios/templates/libgodot.ios.simulator.a ios_xcode/libgodot.ios.release.xcframework/ios-arm64_x86_64-simulator/libgodot.a
-#  cp out/ios/templates/libgodot.ios.debug.simulator.a ios_xcode/libgodot.ios.debug.xcframework/ios-arm64_x86_64-simulator/libgodot.a
-#  cp out/ios/templates/libgodot.ios.a ios_xcode/libgodot.ios.release.xcframework/ios-arm64/libgodot.a
-#  cp out/ios/templates/libgodot.ios.debug.a ios_xcode/libgodot.ios.debug.xcframework/ios-arm64/libgodot.a
-#  cp -r deps/moltenvk/MoltenVK/MoltenVK.xcframework ios_xcode/
-#  rm -rf ios_xcode/MoltenVK.xcframework/{macos,tvos}*
-#  cd ios_xcode
-#  zip -q -9 -r "${templatesdir}/ios.zip" *
-#  cd ..
-#  rm -rf ios_xcode
-#
-  ## Templates TPZ (Classical) ##
+  ## Web (Classical) ##
 
-  echo "${templates_version}" > ${templatesdir}/version.txt
-  pushd ${templatesdir}/..
-  zip -q -9 -r -D "${reldir}/${godot_basename}_export_templates.tpz" templates/*
-  popd
+  # Editor
+  unzip out/web/tools/redot.web.editor.wasm32.zip -d ${webdir}/
+  brotli --keep --force --quality=11 ${webdir}/*
+  binname="${godot_basename}_web_editor.zip"
+  cp out/web/tools/redot.web.editor.wasm32.zip ${reldir}/${binname}
+
+  # Templates
+  cp out/web/templates/redot.web.template_release.wasm32.zip ${templatesdir}/web_release.zip
+  cp out/web/templates/redot.web.template_debug.wasm32.zip ${templatesdir}/web_debug.zip
+
+  cp out/web/templates/redot.web.template_release.wasm32.nothreads.zip ${templatesdir}/web_nothreads_release.zip
+  cp out/web/templates/redot.web.template_debug.wasm32.nothreads.zip ${templatesdir}/web_nothreads_debug.zip
+
+  cp out/web/templates/redot.web.template_release.wasm32.dlink.zip ${templatesdir}/web_dlink_release.zip
+  cp out/web/templates/redot.web.template_debug.wasm32.dlink.zip ${templatesdir}/web_dlink_debug.zip
+
+  cp out/web/templates/redot.web.template_release.wasm32.nothreads.dlink.zip ${templatesdir}/web_dlink_nothreads_release.zip
+  cp out/web/templates/redot.web.template_debug.wasm32.nothreads.dlink.zip ${templatesdir}/web_dlink_nothreads_debug.zip
+
+  ## Android (Classical) ##
+
+  # Lib for direct download
+  cp out/android/templates/godot-lib.template_release.aar ${reldir}/godot-lib.${templates_version}.template_release.aar
+
+  # Editor
+  binname="${godot_basename}_android_editor.apk"
+  cp out/android/tools/android_editor.apk ${reldir}/${binname}
+  binname="${godot_basename}_android_editor.aab"
+  cp out/android/tools/android_editor.aab ${reldir}/${binname}
+
+  # Templates
+  cp out/android/templates/*.apk ${templatesdir}/
+  cp out/android/templates/android_source.zip ${templatesdir}/
+
+  # iOS (Classical) ##
+
+  rm -rf ios_xcode
+  cp -r git/misc/dist/ios_xcode ios_xcode
+  cp out/ios/templates/libgodot.ios.simulator.a ios_xcode/libgodot.ios.release.xcframework/ios-arm64_x86_64-simulator/libgodot.a
+  cp out/ios/templates/libgodot.ios.debug.simulator.a ios_xcode/libgodot.ios.debug.xcframework/ios-arm64_x86_64-simulator/libgodot.a
+  cp out/ios/templates/libgodot.ios.a ios_xcode/libgodot.ios.release.xcframework/ios-arm64/libgodot.a
+  cp out/ios/templates/libgodot.ios.debug.a ios_xcode/libgodot.ios.debug.xcframework/ios-arm64/libgodot.a
+  cp -r deps/moltenvk/MoltenVK/MoltenVK.xcframework ios_xcode/
+  rm -rf ios_xcode/MoltenVK.xcframework/{macos,tvos}*
+  cd ios_xcode
+  zip -q -9 -r "${templatesdir}/ios.zip" *
+  cd ..
+  rm -rf ios_xcode
+
+#  ## Templates TPZ (Classical) ##
+#
+#  echo "${templates_version}" > ${templatesdir}/version.txt
+#  pushd ${templatesdir}/..
+#  zip -q -9 -r -D "${reldir}/${godot_basename}_export_templates.tpz" templates/*
+#  popd
 
 #  ## SHA-512 sums (Classical) ##
 #
@@ -526,14 +527,14 @@ if [ "${build_mono}" == "1" ]; then
 #  rm -rf macos_template.app
 #  sign_macos_template ${templatesdir_mono} 1
 #
-#  ## Android (Mono) ##
-#
-#  # Lib for direct download
-#  cp out/android/templates-mono/godot-lib.template_release.aar ${reldir_mono}/godot-lib.${templates_version}.mono.template_release.aar
-#
-#  # Templates
-#  cp out/android/templates-mono/*.apk ${templatesdir_mono}/
-#  cp out/android/templates-mono/android_source.zip ${templatesdir_mono}/
+  # Android (Mono) ##
+
+  # Lib for direct download
+  cp out/android/templates-mono/godot-lib.template_release.aar ${reldir_mono}/godot-lib.${templates_version}.mono.template_release.aar
+
+  # Templates
+  cp out/android/templates-mono/*.apk ${templatesdir_mono}/
+  cp out/android/templates-mono/android_source.zip ${templatesdir_mono}/
 
 #  ## iOS (Mono) ##
 #
@@ -546,28 +547,28 @@ if [ "${build_mono}" == "1" ]; then
   cp -r deps/moltenvk/MoltenVK/MoltenVK.xcframework ios_xcode/
   rm -rf ios_xcode/MoltenVK.xcframework/{macos,tvos}*
   cd ios_xcode
-#  zip -q -9 -r "${templatesdir_mono}/ios.zip" *
-#  cd ..
-#  rm -rf ios_xcode
-#
-#  # No .NET support for those platforms yet.
-#
-#  if false; then
-#
-#  ## Web (Mono) ##
-#
-#  # Templates
-#  cp out/web/templates-mono/redot.web.template_debug.wasm32.mono.zip ${templatesdir_mono}/web_debug.zip
-#  cp out/web/templates-mono/redot.web.template_release.wasm32.mono.zip ${templatesdir_mono}/web_release.zip
-#
-#  fi
+  zip -q -9 -r "${templatesdir_mono}/ios.zip" *
+  cd ..
+  rm -rf ios_xcode
 
-  ## Templates TPZ (Mono) ##
-  echo "TEMPLATES"
-  echo "${templates_version}.mono" > ${templatesdir_mono}/version.txt
-  pushd ${templatesdir_mono}/..
-  zip -q -9 -r -D "${reldir_mono}/${godot_basename}_mono_export_templates.tpz" templates/*
-  popd
+  # No .NET support for those platforms yet.
+
+  if false; then
+
+  ## Web (Mono) ##
+
+  # Templates
+  cp out/web/templates-mono/redot.web.template_debug.wasm32.mono.zip ${templatesdir_mono}/web_debug.zip
+  cp out/web/templates-mono/redot.web.template_release.wasm32.mono.zip ${templatesdir_mono}/web_release.zip
+
+  fi
+
+#  ## Templates TPZ (Mono) ##
+#  echo "TEMPLATES"
+#  echo "${templates_version}.mono" > ${templatesdir_mono}/version.txt
+#  pushd ${templatesdir_mono}/..
+#  zip -q -9 -r -D "${reldir_mono}/${godot_basename}_mono_export_templates.tpz" templates/*
+#  popd
 
 #  ## SHA-512 sums (Mono) ##
 #

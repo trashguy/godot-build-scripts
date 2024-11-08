@@ -41,7 +41,7 @@ if [ "${CLASSICAL}" == "1" ]; then
   mkdir -p /root/out/tools
   # Copy the generated Android editor binaries (apk & aab).
   if [ "$store_release" == "yes" ]; then
-    cp bin/android_editor_builds/android_editor-release.apk /root/out/tools/android_editor.apk
+    cp bin/android_editor_builds/android_editor-r*.apk /root/out/tools/android_editor.apk
     cp bin/android_editor_builds/android_editor-release.aab /root/out/tools/android_editor.aab
   else
     cp bin/android_editor_builds/android_editor-debug.apk /root/out/tools/android_editor.apk
