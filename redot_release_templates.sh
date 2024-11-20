@@ -2,8 +2,8 @@
 
 set -e
 
-export redot_version=4.3-rc.1
-export template_version=4.3.rc.1
+export redot_version=4.3-stable
+export template_version=4.3.stable
 
 export basedir=$(pwd)
 export reldir="${basedir}/releases/${redot_version}"
@@ -23,7 +23,7 @@ popd
 
 ## SHA-512 sums (Classical) ##
 
-pushd ${reldir}
+pushd ${reldir}``
 sha512sum [Rr]* > SHA512-SUMS.txt
 mkdir -p ${basedir}/sha512sums/${redot_version}
 cp SHA512-SUMS.txt ${basedir}/sha512sums/${redot_version}/
@@ -41,5 +41,5 @@ popd
 pushd ${reldir_mono}
 sha512sum [Rr]* >> SHA512-SUMS.txt
 mkdir -p ${basedir}/sha512sums/${redot_version}/mono
-cp SHA512-SUMS.txt ${basedir}/sha512sums/${redot_version}/mono/
+cat SHA512-SUMS.txt > ${basedir}/sha512sums/${redot_version}
 popd

@@ -1,15 +1,16 @@
 #!/bin/bash
 
 source config.sh
-export godot_version="4.3-rc.1"
+export godot_version="4.3-stable"
 export basedir=$(pwd)
 export reldir="${basedir}/releases/${godot_version}"
 export reldir_mono="${reldir}/mono"
-export binname="Redot_v4.3-rc.1_mono_macos.universal"
+export binname="Redot_v4.3-stable_mono_macos.universal"
+
 
 export templatesdir_mono="tmp/mono/templates"
 
-export templates_version=4.3.rc.1
+export templates_version=4.3.stable
 
 mkdir -p ${templatesdir_mono}
 

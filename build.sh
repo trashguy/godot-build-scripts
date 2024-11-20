@@ -194,6 +194,7 @@ fi
 
 if [ "${skip_git_checkout}" == 0 ]; then
   git clone https://github.com/Redot-Engine/redot-engine git || /bin/true
+#  git clone https://github.com/trashguy/redot-engine.git git || /bin/true
   pushd git
   git checkout -b ${git_treeish} origin/${git_treeish} || git checkout ${git_treeish}
   git reset --hard
@@ -224,9 +225,8 @@ mkdir -p ${basedir}/out
 mkdir -p ${basedir}/out/logs
 mkdir -p ${basedir}/mono-glue
 
-#mv redot-4.3-beta.3.tar.gz godot-4.3-beta.3.tar.gz
 #
-export podman_run="${podman} run -it --rm --env BUILD_NAME --env GODOT_VERSION_STATUS --env NUM_CORES --env CLASSICAL=${build_classical} --env MONO=${build_mono} -v ${basedir}/godot-${godot_version}.tar.gz:/root/godot.tar.gz -v ${basedir}/mono-glue:/root/mono-glue -w /root/"
+export podman_run="${podman} run -it --rm --env BUILD_NAME --env GODOT_VERSION_STATUS --env NUM_CORES --env CLASSICAL=${build_classical} --env MONO=${build_mono} -v ${basedir}/redot-${godot_version}.tar.gz:/root/godot.tar.gz -v ${basedir}/mono-glue:/root/mono-glue -w /root/"
 export img_version=$IMAGE_VERSION
 
 mkdir -p ${basedir}/mono-glue

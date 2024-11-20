@@ -226,9 +226,9 @@ fi
 
 if [ "${make_tarball}" == "1" ]; then
 
-  zcat godot-${godot_version}.tar.gz | xz -c > ${reldir}/godot-${godot_version}.tar.xz
+  zcat redot-${godot_version}.tar.gz | xz -c > ${reldir}/redot-${godot_version}.tar.xz
   pushd ${reldir}
-  sha256sum godot-${godot_version}.tar.xz > godot-${godot_version}.tar.xz.sha256
+  sha256sum redot-${godot_version}.tar.xz > redot-${godot_version}.tar.xz.sha256
   popd
 
 fi

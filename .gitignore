@@ -18,3 +18,5 @@ releases/
 sha512sums/
 tmp/
 web/
+
+.idea
